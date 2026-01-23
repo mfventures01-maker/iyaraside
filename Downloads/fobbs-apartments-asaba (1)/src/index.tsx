@@ -8,9 +8,11 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
+import { HashRouter } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(rootElement);
 root.render(
-  <React.StrictMode>
+  <HashRouter>
     <App />
-  </React.StrictMode>
+  </HashRouter>
 );
