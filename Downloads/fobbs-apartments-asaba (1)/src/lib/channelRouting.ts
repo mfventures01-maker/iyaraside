@@ -106,6 +106,43 @@ ${payload.subtotal > 0 ? `*Est. Cost:* ₦${payload.subtotal.toLocaleString()}` 
 _Sent via CARSS_`;
 }
 
+
+export function buildBarOrderMessage(payload: any): string {
+    const itemsList = payload.items.map((i: any) => `- ${i.name} (x${i.quantity})`).join('\n');
+    return `*NEW BAR ORDER* 🍸
+  
+*${HOTEL_CONFIG.business_name}*
+------------------------
+*ID:* ${payload.request_id}
+*Room:* ${payload.room_number}
+------------------------
+*Order Details:*
+${itemsList}
+
+*Subtotal:* ₦${payload.subtotal.toLocaleString()}
+------------------------
+*Notes:* ${payload.notes || "None"}
+
+_Sent via CARSS_`;
+}
+
+export function buildReservationMessage(payload: any): string {
+    return `*NEW RESERVATION REQUEST* 📅
+  
+*${HOTEL_CONFIG.business_name}*
+------------------------
+*Type:* ${payload.type}
+*Guest:* ${payload.guest_name}
+------------------------
+*Date:* ${payload.date}
+*Time:* ${payload.time}
+*Size:* ${payload.guests} People
+------------------------
+*Notes:* ${payload.notes || "None"}
+
+_Sent via CARSS_`;
+}
+
 // --- ROUTING UTILS ---
 
 export function sanitizePhoneToE164NG(phone: string): string {

@@ -109,6 +109,11 @@ const HotelLanding: React.FC = () => {
                         <MapPin className="w-4 h-4" />
                         <span>{HOTEL_CONFIG.location}</span>
                     </div>
+                    <div className="mt-6">
+                        <Link to="/dashboard/guest-hub" className="px-8 py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-all transform hover:scale-105 backdrop-blur-sm bg-opacity-90">
+                            Open Guest Hub
+                        </Link>
+                    </div>
                 </div>
             </div>
 
@@ -126,7 +131,7 @@ const HotelLanding: React.FC = () => {
                                 <div className="text-sm text-emerald-700">Order room service, request cleaning, and more.</div>
                             </div>
                         </div>
-                        <Link to="/guest" className="px-6 py-3 bg-emerald-900 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-emerald-800 transition-colors w-full sm:w-auto text-center">
+                        <Link to="/dashboard/guest-hub" className="px-6 py-3 bg-emerald-900 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-emerald-800 transition-colors w-full sm:w-auto text-center">
                             Open Guest Hub
                         </Link>
                     </div>

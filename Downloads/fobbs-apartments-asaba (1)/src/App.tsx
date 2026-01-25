@@ -22,6 +22,11 @@ import DashboardHome from '@/pages/dashboard/DashboardHome';
 import Payments from '@/pages/dashboard/Payments';
 import Disputes from '@/pages/dashboard/Disputes';
 import Outbox from '@/pages/dashboard/Outbox';
+import GuestHubLanding from '@/pages/dashboard/guesthub/GuestHubLanding';
+import Cleaning from '@/pages/dashboard/guesthub/Cleaning';
+import Restaurant from '@/pages/dashboard/guesthub/Restaurant';
+import Bar from '@/pages/dashboard/guesthub/Bar';
+import Reservations from '@/pages/dashboard/guesthub/Reservations';
 
 const AppContent: React.FC = () => {
   return (
@@ -45,6 +50,13 @@ const AppContent: React.FC = () => {
             <Route path="payments" element={<Payments />} />
             <Route path="disputes" element={<Disputes />} />
             <Route path="outbox" element={<Outbox />} />
+
+            {/* Guest Hub Routes */}
+            <Route path="guest-hub" element={<GuestHubLanding />} />
+            <Route path="guest-hub/cleaning" element={<Cleaning />} />
+            <Route path="guest-hub/restaurant" element={<Restaurant />} />
+            <Route path="guest-hub/bar" element={<Bar />} />
+            <Route path="guest-hub/reservations" element={<Reservations />} />
           </Route>
         </Route>
 

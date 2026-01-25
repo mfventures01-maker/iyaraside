@@ -108,6 +108,10 @@ export interface DeploymentConfig {
             };
             note: string;
         };
+        bar: {
+            enabled: boolean;
+            menu: MenuItem[];
+        };
     };
     restaurant_section?: RestaurantSection;
     services_section?: ServiceSection;
@@ -257,6 +261,21 @@ export const HOTEL_CONFIG: DeploymentConfig = {
                 account_number: "0123456789"
             },
             note: "For POS payments, please pay at the front desk and reference your Order/Request ID. For transfer, send proof of payment to the front desk WhatsApp."
+        },
+        bar: {
+            enabled: true,
+            menu: [
+                { id: "chapman", name: "Classic Chapman", price: 2500, category: "Cocktails" },
+                { id: "mojito", name: "Mojito", price: 3000, category: "Cocktails" },
+                { id: "hennessy", name: "Hennessy VS", price: 3500, category: "Spirits" },
+                { id: "vodka", name: "Absolut Vodka", price: 3000, category: "Spirits" },
+                { id: "red_wine", name: "Merlot Red Wine", price: 4000, category: "Wine" },
+                { id: "white_wine", name: "Chardonnay", price: 4000, category: "Wine" },
+                { id: "heineken", name: "Heineken", price: 1000, category: "Beer" },
+                { id: "star", name: "Star Radler", price: 800, category: "Beer" },
+                { id: "coke", name: "Coca Cola", price: 500, category: "Soft Drinks" },
+                { id: "sprite", name: "Sprite", price: 500, category: "Soft Drinks" }
+            ]
         }
     }
     ,
