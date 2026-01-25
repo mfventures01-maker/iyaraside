@@ -12,12 +12,13 @@
     "node": ">=20 <21"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "lucide-react": "^0.294.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^6.20.0",
-    "lucide-react": "^0.294.0",
-    "zustand": "^4.4.0",
-    "@supabase/supabase-js": "^2.39.0"
+    "zustand": "^4.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
