@@ -33,6 +33,8 @@ import RestaurantPublic from '@/pages/public/RestaurantPublic';
 import BarPublic from '@/pages/public/BarPublic';
 import ServicesHubPublic from '@/pages/public/ServicesHubPublic';
 import ServiceRequestPublic from '@/pages/public/ServiceRequestPublic';
+import StaffAdmin from '@/pages/dashboard/StaffAdmin';
+import DepartmentDashboard from '@/pages/staff/DepartmentDashboard';
 
 const AppContent: React.FC = () => {
   return (
@@ -56,13 +58,14 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/staff-login" element={<StaffLogin />} />
 
-        {/* Internal Dashboard Routes */}
+
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="payments" element={<Payments />} />
             <Route path="disputes" element={<Disputes />} />
             <Route path="outbox" element={<Outbox />} />
+            <Route path="staff-admin" element={<StaffAdmin />} />
 
             {/* Guest Hub Routes (Internal) */}
             <Route path="guest-hub" element={<GuestHubLanding />} />
@@ -74,6 +77,10 @@ const AppContent: React.FC = () => {
 
           {/* Staff Portal */}
           <Route path="/staff" element={<StaffDashboard />} />
+          <Route path="/staff/restaurant" element={<DepartmentDashboard department="restaurant" />} />
+          <Route path="/staff/bar" element={<DepartmentDashboard department="bar" />} />
+          <Route path="/staff/reception" element={<DepartmentDashboard department="reception" />} />
+          <Route path="/staff/housekeeping" element={<DepartmentDashboard department="housekeeping" />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

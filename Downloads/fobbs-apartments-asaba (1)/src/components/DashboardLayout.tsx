@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, CreditCard, Scale, Send, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, CreditCard, Scale, Send, LogOut, Menu, X, Users } from 'lucide-react';
 
 const DashboardLayout: React.FC = () => {
     const { profile, signOut } = useAuth();
@@ -22,6 +22,7 @@ const DashboardLayout: React.FC = () => {
 
     if (profile?.role === 'owner' || profile?.role === 'ceo' || profile?.role === 'manager') {
         navItems.push({ name: 'Admin Outbox', path: '/dashboard/outbox', icon: Send });
+        navItems.push({ name: 'Staff Creator', path: '/dashboard/staff-admin', icon: Users }); // Added
     }
 
     return (
