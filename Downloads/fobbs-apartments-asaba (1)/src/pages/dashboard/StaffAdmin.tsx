@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
-import { Mail, User, Briefcase, Send, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, User, Briefcase, Send, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const DEPARTMENTS = ['Restaurant', 'Bar', 'Reception', 'Housekeeping'];
@@ -15,7 +15,8 @@ const StaffAdmin: React.FC = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        role: 'Restaurant' // Default
+        role: 'staff', // manager | staff
+        department: 'Restaurant' // Default
     });
 
     // Permission Check
@@ -44,17 +45,24 @@ const StaffAdmin: React.FC = () => {
                 throw new Error("No active session. Please login again.");
             }
 
+            // Construct payload
+            const payload: any = {
+                full_name: formData.name,
+                email: formData.email,
+                role: formData.role
+            };
+
+            if (formData.role === 'staff') {
+                payload.department = formData.department;
+            }
+
             const response = await fetch('/api/create-staff-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${session.access_token}`
                 },
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    role: formData.role
-                })
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
@@ -63,9 +71,9 @@ const StaffAdmin: React.FC = () => {
                 throw new Error(data.error || 'Failed to send invite');
             }
 
-            setSuccessMsg(`Invite sent successfully to ${data.email}!`);
+            setSuccessMsg(`Invite sent successfully to ${formData.email}!`);
             toast.success("Invite sent!");
-            setFormData({ name: '', email: '', role: 'Restaurant' }); // Reset form
+            setFormData(prev => ({ ...prev, name: '', email: '' })); // Reset name/email only
 
         } catch (error: any) {
             console.error("Invite error:", error);
@@ -80,10 +88,9 @@ const StaffAdmin: React.FC = () => {
         <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-6 sm:p-8 bg-gradient-to-br from-emerald-900 to-emerald-950 text-white">
-                    <h2 className="text-2xl font-serif font-bold mb-2">Invite Staff Member</h2>
+                    <h2 className="text-2xl font-serif font-bold mb-2">Invite Team Member</h2>
                     <p className="text-emerald-200">
-                        Send an invitation email to add a new staff member to your team.
-                        They will receive a link to set their password.
+                        Send an invitation email to add a new manager or staff member.
                     </p>
                 </div>
 
@@ -121,33 +128,60 @@ const StaffAdmin: React.FC = () => {
                                 value={formData.email}
                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
-                                placeholder="staff@fobbs.com"
+                                placeholder="colleague@fobbs.com"
                             />
                         </div>
                     </div>
 
-                    {/* Department Select */}
-                    <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-                            Department / Role
-                        </label>
-                        <div className="relative">
-                            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                            <select
-                                id="role"
-                                value={formData.role}
-                                onChange={e => setFormData({ ...formData, role: e.target.value })}
-                                className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors appearance-none"
-                            >
-                                {DEPARTMENTS.map(dept => (
-                                    <option key={dept} value={dept}>{dept}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                    {/* Role Selection */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div
+                            onClick={() => setFormData({ ...formData, role: 'staff' })}
+                            className={`cursor-pointer p-4 border rounded-xl flex items-center gap-3 transition-colors ${formData.role === 'staff' ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500' : 'border-gray-200 hover:border-gray-300'}`}
+                        >
+                            <User className={`w-5 h-5 ${formData.role === 'staff' ? 'text-emerald-600' : 'text-gray-400'}`} />
+                            <div>
+                                <h3 className={`font-semibold text-sm ${formData.role === 'staff' ? 'text-emerald-900' : 'text-gray-700'}`}>Staff</h3>
+                                <p className="text-xs text-gray-500">Regular employee</p>
+                            </div>
+                        </div>
+
+                        <div
+                            onClick={() => setFormData({ ...formData, role: 'manager' })}
+                            className={`cursor-pointer p-4 border rounded-xl flex items-center gap-3 transition-colors ${formData.role === 'manager' ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500' : 'border-gray-200 hover:border-gray-300'}`}
+                        >
+                            <Shield className={`w-5 h-5 ${formData.role === 'manager' ? 'text-emerald-600' : 'text-gray-400'}`} />
+                            <div>
+                                <h3 className={`font-semibold text-sm ${formData.role === 'manager' ? 'text-emerald-900' : 'text-gray-700'}`}>Manager</h3>
+                                <p className="text-xs text-gray-500">Full Access (No Dept)</p>
                             </div>
                         </div>
                     </div>
+
+                    {/* Department Select (Only if Staff) */}
+                    {formData.role === 'staff' && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                            <label htmlFor="dept" className="block text-sm font-medium text-gray-700 mb-1">
+                                Department
+                            </label>
+                            <div className="relative">
+                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <select
+                                    id="dept"
+                                    value={formData.department}
+                                    onChange={e => setFormData({ ...formData, department: e.target.value })}
+                                    className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors appearance-none"
+                                >
+                                    {DEPARTMENTS.map(dept => (
+                                        <option key={dept} value={dept}>{dept}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Messages */}
                     {errorMsg && (
@@ -171,7 +205,7 @@ const StaffAdmin: React.FC = () => {
                         className="w-full bg-emerald-900 text-white py-4 rounded-xl font-semibold hover:bg-emerald-800 transition-all shadow-lg active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {loading ? (
-                            <span className="animate-pulse">Sending Invite...</span>
+                            <span className="animate-pulse">Sending Invitation...</span>
                         ) : (
                             <>
                                 <Send className="w-5 h-5" />

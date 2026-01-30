@@ -5,9 +5,10 @@ export const config = {
 };
 
 interface CreateStaffRequest {
-    name: string;
+    full_name: string;
     email: string;
-    role: 'Restaurant' | 'Bar' | 'Reception' | 'Housekeeping';
+    role: 'manager' | 'staff';
+    department?: string;
 }
 
 export default async function handler(request: Request) {
@@ -28,11 +29,10 @@ export default async function handler(request: Request) {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-        return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Server configuration error: Missing env vars' }), { status: 500 });
     }
 
     // 4. Init Supabase Clients
-    // Admin client for user management
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
         auth: {
             autoRefreshToken: false,
@@ -42,14 +42,12 @@ export default async function handler(request: Request) {
 
     // 5. Verify Caller (Auth & Role)
     try {
-        // Get caller user from token
         const { data: { user: callerUser }, error: userError } = await supabaseAdmin.auth.getUser(token);
 
         if (userError || !callerUser) {
             return new Response(JSON.stringify({ error: 'Invalid auth token' }), { status: 401 });
         }
 
-        // Check caller profile for role and business_id
         const { data: callerProfile, error: profileError } = await supabaseAdmin
             .from('profiles')
             .select('role, business_id')
@@ -60,7 +58,6 @@ export default async function handler(request: Request) {
             return new Response(JSON.stringify({ error: 'Caller profile not found' }), { status: 403 });
         }
 
-        // Enforce role permissions
         const allowedRoles = ['owner', 'ceo', 'manager'];
         if (!allowedRoles.includes(callerProfile.role)) {
             return new Response(JSON.stringify({ error: 'Unauthorized: Insufficient permissions' }), { status: 403 });
@@ -68,49 +65,56 @@ export default async function handler(request: Request) {
 
         // 6. Parse & Validate Body
         const body: CreateStaffRequest = await request.json();
-        const { name, email, role } = body;
+        const { full_name, email, role, department } = body;
 
-        if (!name || !email || !role) {
-            return new Response(JSON.stringify({ error: 'Missing name, email, or role' }), { status: 400 });
+        if (!full_name || !email || !role) {
+            return new Response(JSON.stringify({ error: 'Missing full_name, email, or role' }), { status: 400 });
         }
 
-        // Map role to department (lowercase)
-        const validRoles = ['Restaurant', 'Bar', 'Reception', 'Housekeeping'];
-        if (!validRoles.includes(role)) {
-            return new Response(JSON.stringify({ error: 'Invalid role selection' }), { status: 400 });
+        // Validate Role
+        if (!['manager', 'staff'].includes(role)) {
+            return new Response(JSON.stringify({ error: 'Invalid role. Must be manager or staff' }), { status: 400 });
         }
-        const department = role.toLowerCase();
 
-        // 7. Invite User via Supabase Admin
+        // Validate Department if Staff
+        let validDept = null;
+        if (role === 'staff') {
+            if (!department) {
+                return new Response(JSON.stringify({ error: 'Department is required for staff role' }), { status: 400 });
+            }
+            const validDepts = ['restaurant', 'bar', 'reception', 'housekeeping'];
+            if (!validDepts.includes(department.toLowerCase())) {
+                return new Response(JSON.stringify({ error: `Invalid department. Must be one of: ${validDepts.join(', ')}` }), { status: 400 });
+            }
+            validDept = department.toLowerCase();
+        }
+
+        // 7. Invite User
         const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-            data: { full_name: name }
+            data: { full_name }
         });
 
         if (inviteError) {
             return new Response(JSON.stringify({ error: `Invite failed: ${inviteError.message}` }), { status: 400 });
         }
-
         if (!inviteData.user) {
             return new Response(JSON.stringify({ error: 'Invite failed: No user returned' }), { status: 500 });
         }
 
         // 8. Upsert Profile
-        // We use upsert in case a profile row already exists (e.g. from previous attempts or triggers)
         const { error: upsertError } = await supabaseAdmin
             .from('profiles')
             .upsert({
                 user_id: inviteData.user.id,
-                business_id: callerProfile.business_id, // Link to caller's business
-                full_name: name,
-                role: 'staff',
-                department: department,
+                business_id: callerProfile.business_id,
+                full_name: full_name,
+                role: role,
+                department: validDept, // null for manager
                 is_active: true,
-                // email: email // Uncomment if you have an email column in profiles
+                created_at: new Date().toISOString()
             });
 
         if (upsertError) {
-            // Note: We don't delete the auth user here as they might already exist.
-            // We just report the profile error.
             return new Response(JSON.stringify({ error: `Profile creation failed: ${upsertError.message}` }), { status: 500 });
         }
 
@@ -119,9 +123,6 @@ export default async function handler(request: Request) {
             JSON.stringify({
                 success: true,
                 user_id: inviteData.user.id,
-                email: inviteData.user.email,
-                department: department,
-                business_id: callerProfile.business_id,
                 message: 'Invitation sent successfully'
             }),
             { status: 200, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } }
