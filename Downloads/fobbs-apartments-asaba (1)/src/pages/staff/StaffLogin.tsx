@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, AlertCircle, Info } from 'lucide-react';
+import { Lock, User, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { routeForProfile, Profile } from '@/auth/routeRules';
 
 const StaffLogin: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -75,24 +76,17 @@ const StaffLogin: React.FC = () => {
 
                 const allowedRoles = ['owner', 'ceo', 'manager', 'staff'];
                 if (allowedRoles.includes(profile.role)) {
-
-                    const role = profile.role;
-                    const department = profile.department?.toLowerCase();
-
                     toast.success(`Welcome back, ${profile.full_name || 'Staff'}!`);
 
-                    // Routing Logic
-                    if (['owner', 'ceo', 'manager'].includes(role)) {
-                        navigate('/dashboard');
-                    } else if (role === 'staff') {
-                        if (department === 'restaurant') navigate('/staff/restaurant');
-                        else if (department === 'bar') navigate('/staff/bar');
-                        else if (department === 'reception') navigate('/staff/reception');
-                        else if (department === 'housekeeping') navigate('/staff/housekeeping');
-                        else navigate('/staff'); // Fallback dashboard
-                    } else {
-                        navigate('/dashboard'); // Default fallback
-                    }
+                    // Use routeForProfile for consistent routing
+                    const profileData: Profile = {
+                        user_id: profile.user_id,
+                        business_id: profile.business_id || '',
+                        role: profile.role,
+                        department: profile.department || undefined,
+                    };
+                    const targetRoute = routeForProfile(profileData);
+                    navigate(targetRoute, { replace: true });
 
                 } else {
                     toast.error('Unauthorized: Staff access only.');

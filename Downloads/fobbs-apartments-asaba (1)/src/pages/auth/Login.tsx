@@ -1,30 +1,47 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { KeyRound, Mail } from 'lucide-react';
+import { getAuthedProfile, AuthError } from '@/auth/getAuthedProfile';
+import { routeForProfile } from '@/auth/routeRules';
 
 const Login: React.FC = () => {
     const { signInWithPassword } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const from = location.state?.from?.pathname || "/dashboard";
+    const [profileError, setProfileError] = useState<string | null>(null);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setProfileError(null);
+
         const { error } = await signInWithPassword(email, password);
-        setLoading(false);
 
         if (error) {
+            setLoading(false);
             toast.error(error.message);
-        } else {
+            return;
+        }
+
+        // Fetch profile and route accordingly
+        try {
+            const profile = await getAuthedProfile();
+            const targetRoute = routeForProfile(profile);
             toast.success('Welcome back!');
-            navigate(from, { replace: true });
+            navigate(targetRoute, { replace: true });
+        } catch (err) {
+            setLoading(false);
+            if (err instanceof AuthError) {
+                setProfileError(err.message);
+                toast.error(err.message);
+            } else {
+                setProfileError('Failed to load profile. Please try again.');
+                toast.error('Failed to load profile');
+            }
         }
     };
 
@@ -93,6 +110,12 @@ const Login: React.FC = () => {
                             </button>
                         </div>
                     </form>
+
+                    {profileError && (
+                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                            <p className="text-sm text-red-700">{profileError}</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

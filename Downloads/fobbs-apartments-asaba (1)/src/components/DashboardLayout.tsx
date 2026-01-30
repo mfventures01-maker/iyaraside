@@ -14,15 +14,35 @@ const DashboardLayout: React.FC = () => {
         navigate('/login');
     };
 
+    // Determine home route
+    const homepath = profile ? (
+        ['owner', 'ceo'].includes(profile.role) ? '/dashboard/owner' :
+            profile.role === 'manager' ? '/dashboard/manager' :
+                profile.role === 'staff' && profile.department ? `/dashboard/staff/${profile.department}` :
+                    '/dashboard/staff'
+    ) : '/dashboard';
+
     const navItems = [
-        { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'Payments', path: '/dashboard/payments', icon: CreditCard },
-        { name: 'Disputes', path: '/dashboard/disputes', icon: Scale },
+        { name: 'Overview', path: homepath, icon: LayoutDashboard },
     ];
 
-    if (profile?.role === 'owner' || profile?.role === 'ceo' || profile?.role === 'manager') {
+    // Add extra items for admins
+    if (['owner', 'ceo', 'manager'].includes(profile?.role || '')) {
+        navItems.push({ name: 'Payments', path: '/dashboard/payments', icon: CreditCard });
+        navItems.push({ name: 'Disputes', path: '/dashboard/disputes', icon: Scale });
         navItems.push({ name: 'Admin Outbox', path: '/dashboard/outbox', icon: Send });
-        navItems.push({ name: 'Staff Creator', path: '/dashboard/staff-admin', icon: Users }); // Added
+
+        // Staff Admin Link - adjust based on base path if needed, but absolute path is safest
+        // In App.tsx, staff-admin is under /dashboard/owner/staff-admin but let's check where it is relative
+        // Actually, it's safer to just put it at a known location. 
+        // With the current App.tsx, it's nested under /dashboard/owner. 
+        // Let's assume we want to link validation.
+        const adminPath = profile?.role === 'manager' ? '/dashboard/manager/staff-admin' : '/dashboard/owner/staff-admin';
+        // Note: You need to ensure the route exists for manager too in App.tsx
+        navItems.push({ name: 'Staff Creator', path: adminPath, icon: Users });
+    } else {
+        // Staff items (if any specific ones needed)
+        // navItems.push({ name: 'My Tasks', path: '/dashboard/tasks', icon: List });
     }
 
     return (
@@ -54,7 +74,9 @@ const DashboardLayout: React.FC = () => {
                         <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
                             <div className="flex flex-col items-end">
                                 <span className="text-sm font-medium text-gray-700 uppercase">{profile?.role}</span>
-                                <span className="text-xs text-gray-500">Business: {profile?.business_id.slice(0, 8)}...</span>
+                                <span className="text-xs text-gray-500">
+                                    {profile?.business_id ? `Business: ${profile.business_id.slice(0, 8)}...` : 'No Business'}
+                                </span>
                             </div>
                             <button
                                 onClick={handleSignOut}

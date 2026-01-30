@@ -7,6 +7,8 @@ export interface Profile {
   user_id: string;
   role: 'owner' | 'ceo' | 'manager' | 'staff';
   business_id: string;
+  department?: string;
+  full_name?: string;
 }
 
 interface AuthContextType {
