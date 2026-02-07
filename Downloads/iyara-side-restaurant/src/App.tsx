@@ -14,6 +14,12 @@ import EliteDashboard from './pages/EliteDashboard';
 import { CartProvider } from './context/CartContext';
 import { LuxuryProvider } from './context/LuxuryContext';
 import { OperationsProvider } from './context/OperationsContext';
+import { CarssProvider } from './carss/CarssContext';
+import StaffLogin from './pages/StaffLogin';
+import DashboardRouter from './pages/DashboardRouter';
+import CeoHQ from './pages/CeoHQ';
+import StaffAdmin from './pages/StaffAdmin';
+import TransactionsLog from './pages/TransactionsLog';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -26,29 +32,38 @@ const ScrollToTop = () => {
 const App: React.FC = () => {
   return (
     <CartProvider>
-      <OperationsProvider>
-        <LuxuryProvider>
-          <Router>
-            <ScrollToTop />
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/menu" element={<MenuPage />} />
-                  <Route path="/reservations" element={<Reservations />} />
-                  <Route path="/catering" element={<Catering />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/gallery" element={<Gallery />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/elite" element={<EliteDashboard />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </Router>
-        </LuxuryProvider>
-      </OperationsProvider>
+      <CarssProvider>
+        <OperationsProvider>
+          <LuxuryProvider>
+            <Router>
+              <ScrollToTop />
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/menu" element={<MenuPage />} />
+                    <Route path="/reservations" element={<Reservations />} />
+                    <Route path="/catering" element={<Catering />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/gallery" element={<Gallery />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/elite" element={<EliteDashboard />} />
+
+                    {/* CARSS Protocol Routes */}
+                    <Route path="/staff/login" element={<StaffLogin />} />
+                    <Route path="/dashboard" element={<DashboardRouter />} />
+                    <Route path="/dashboard/ceo" element={<CeoHQ />} />
+                    <Route path="/dashboard/staff-admin" element={<StaffAdmin />} />
+                    <Route path="/dashboard/transactions" element={<TransactionsLog />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </Router>
+          </LuxuryProvider>
+        </OperationsProvider>
+      </CarssProvider>
     </CartProvider>
   );
 };
