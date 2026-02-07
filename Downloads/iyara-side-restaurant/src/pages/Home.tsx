@@ -1,17 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Utensils, Award, ChevronRight, Star, Zap, ShieldCheck, Sparkles, ArrowDown, MessageSquare, BellRing } from 'lucide-react';
+import { Utensils, Award, ChevronRight, Star, Zap, ShieldCheck, ArrowDown, MessageSquare, BellRing } from 'lucide-react';
 import { ALL_DISHES, TESTIMONIALS } from '../constants';
-import { getMenuRecommendation } from '../services/geminiService';
 import { useCart } from '../context/CartContext';
 import DigitalMenu from '../components/DigitalMenu';
 
 const Home: React.FC = () => {
   const { tableNumber, setTableNumber } = useCart();
-  const [preference, setPreference] = useState('');
-  const [aiRec, setAiRec] = useState('');
-  const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [manualTable, setManualTable] = useState('');
   const location = useLocation();
@@ -26,13 +22,7 @@ const Home: React.FC = () => {
     }
   }, [location, setTableNumber]);
 
-  const handleAskAI = async () => {
-    if (!preference) return;
-    setLoading(true);
-    const rec = await getMenuRecommendation(preference);
-    setAiRec(rec || '');
-    setLoading(false);
-  };
+
 
   const handleManualTableSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,16 +65,16 @@ const Home: React.FC = () => {
               <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-6 px-4 md:px-0 mb-12">
                 <Link
                   to="/menu"
-                  className="group relative bg-brand-gold text-brand-green px-14 py-7 rounded-3xl font-black text-3xl hover:bg-white transition-all shadow-[0_20px_60px_rgba(212,175,55,0.6)] hover:-translate-y-2 active:scale-95 flex items-center justify-center border-b-8 border-brand-green/20"
+                  className="group relative bg-brand-gold text-brand-dark px-14 py-7 rounded-3xl font-black text-3xl hover:bg-white transition-all shadow-[0_20px_60px_rgba(212,175,55,0.6)] hover:-translate-y-2 active:scale-95 flex items-center justify-center border-b-8 border-brand-dark/20"
                 >
-                  <Zap className="mr-3 fill-brand-green group-hover:animate-bounce" size={32} />
+                  <Zap className="mr-3 fill-brand-dark group-hover:animate-bounce" size={32} />
                   ORDER NOW
                 </Link>
                 <button
                   onClick={handleCallWaiter}
-                  className="group bg-white/10 backdrop-blur-xl border-2 border-white/40 text-white px-10 py-7 rounded-3xl font-black text-2xl hover:bg-white/20 transition-all flex items-center justify-center gap-3"
+                  className="group bg-white text-brand-dark px-10 py-7 rounded-3xl font-black text-2xl hover:bg-brand-cream transition-all flex items-center justify-center gap-3 shadow-xl"
                 >
-                  <BellRing className="group-hover:rotate-12 transition-transform" />
+                  <BellRing className="group-hover:rotate-12 transition-transform text-brand-gold" />
                   CALL WAITER
                 </button>
               </div>
@@ -113,20 +103,20 @@ const Home: React.FC = () => {
                     onChange={(e) => setManualTable(e.target.value)}
                     className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white outline-none focus:border-brand-gold transition-all"
                   />
-                  <button type="submit" className="bg-brand-gold text-brand-green px-6 py-3 rounded-xl font-black text-sm hover:bg-white transition-all">CHECK IN</button>
+                  <button type="submit" className="bg-brand-gold text-brand-dark px-6 py-3 rounded-xl font-black text-sm hover:bg-white transition-all">CHECK IN</button>
                 </form>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-6 px-4 md:px-0">
                 <Link
                   to="/menu"
-                  className="group bg-brand-gold text-brand-green px-12 py-5 rounded-2xl font-black text-xl hover:bg-white transition-all shadow-2xl flex items-center justify-center"
+                  className="group bg-brand-gold text-brand-dark px-12 py-5 rounded-2xl font-black text-xl hover:bg-white transition-all shadow-2xl flex items-center justify-center"
                 >
                   VIEW DIGITAL MENU
                 </Link>
                 <Link
                   to="/reservations"
-                  className="group bg-white/10 border-2 border-white/40 text-white px-10 py-5 rounded-2xl font-black text-xl hover:bg-white/20 transition-all flex items-center justify-center"
+                  className="group bg-white text-brand-dark px-10 py-5 rounded-2xl font-black text-xl hover:bg-brand-cream transition-all flex items-center justify-center shadow-lg"
                 >
                   BOOK A TABLE
                 </Link>
@@ -166,40 +156,7 @@ const Home: React.FC = () => {
         <DigitalMenu />
       </section>
 
-      {/* AI Intelligence Section */}
-      <section id="ai-section" className="py-24 bg-brand-dark text-white relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-gold/50 to-transparent" />
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-brand-gold text-brand-dark px-5 py-2 rounded-full font-black text-[10px] tracking-[0.4em] uppercase mb-10">
-            <Sparkles size={16} /> Iyarà Intelligence
-          </div>
-          <h2 className="text-5xl md:text-6xl font-serif mb-8 font-black leading-tight">What are you <br />craving today?</h2>
-          <div className="flex flex-col md:flex-row gap-5 mb-10">
-            <input
-              type="text"
-              value={preference}
-              onChange={(e) => setPreference(e.target.value)}
-              placeholder="e.g. 'Something light but spicy for lunch...'"
-              className="flex-1 px-10 py-6 rounded-[2rem] bg-white/5 border border-white/10 focus:border-brand-gold outline-none text-white transition-all text-xl"
-            />
-            <button
-              onClick={handleAskAI}
-              disabled={loading}
-              className="bg-brand-gold text-brand-green px-12 py-6 rounded-[2rem] font-black text-xl hover:bg-white transition-all"
-            >
-              {loading ? 'Thinking...' : 'ADVISE ME'}
-            </button>
-          </div>
 
-          {aiRec && (
-            <div className="p-12 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[3rem] text-left animate-fade-in relative group overflow-hidden">
-              <p className="text-brand-gold font-black text-[10px] uppercase tracking-[0.5em] mb-6">Concierge Recommendation</p>
-              <p className="text-white text-2xl leading-relaxed italic font-serif">"{aiRec}"</p>
-              <Link to="/menu" className="inline-flex items-center gap-2 mt-8 text-brand-gold font-bold hover:underline">Go find this on the menu <ChevronRight size={18} /></Link>
-            </div>
-          )}
-        </div>
-      </section>
 
       {/* Global Final Action */}
       <section className="relative py-40 flex items-center justify-center">
