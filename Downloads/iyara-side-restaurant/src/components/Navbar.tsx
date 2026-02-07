@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingCart, MapPin } from '@/components/EmergencyLucideWrapper';
+import { Menu, X, ShoppingCart, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar: React.FC = () => {
@@ -49,9 +49,8 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium tracking-wide uppercase transition-colors ${
-                  location.pathname === link.path ? 'text-brand-gold' : 'text-white hover:text-brand-gold'
-                }`}
+                className={`text-sm font-medium tracking-wide uppercase transition-colors ${location.pathname === link.path ? 'text-brand-gold' : 'text-white hover:text-brand-gold'
+                  }`}
               >
                 {link.name}
               </Link>

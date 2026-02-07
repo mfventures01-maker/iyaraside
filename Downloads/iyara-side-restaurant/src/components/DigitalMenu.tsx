@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Plus, Minus, X, Trash2, MessageSquare, Flame, Leaf, ChevronRight, Check } from '@/components/EmergencyLucideWrapper';
+import { Search, ShoppingBag, Plus, Minus, X, Trash2, MessageSquare, Flame, Leaf, ChevronRight, Check } from 'lucide-react';
 import { ALL_DISHES } from '../constants';
 import { Dish } from '../types';
 import { useCart } from '../context/CartContext';

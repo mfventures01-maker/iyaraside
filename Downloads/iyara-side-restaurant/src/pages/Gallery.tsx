@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, Search, ChevronLeft, ChevronRight, Maximize2 } from '@/components/EmergencyLucideWrapper';
+import { X, Search, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
 const Gallery: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -49,9 +49,8 @@ const Gallery: React.FC = () => {
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`px-8 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${
-                activeFilter === f ? 'bg-brand-green text-white scale-105' : 'bg-white text-brand-green hover:bg-brand-gold/20'
-              }`}
+              className={`px-8 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${activeFilter === f ? 'bg-brand-green text-white scale-105' : 'bg-white text-brand-green hover:bg-brand-gold/20'
+                }`}
             >
               {f}
             </button>
@@ -61,14 +60,14 @@ const Gallery: React.FC = () => {
         {/* Gallery Grid */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
           {filteredImages.map((img, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="relative group overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl transition-all"
               onClick={() => openLightbox(idx)}
             >
-              <img 
-                src={img.src} 
-                alt={img.title} 
+              <img
+                src={img.src}
+                alt={img.title}
                 className="w-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
@@ -95,9 +94,9 @@ const Gallery: React.FC = () => {
               <ChevronLeft size={64} />
             </button>
             <div className="text-center" onClick={e => e.stopPropagation()}>
-              <img 
-                src={filteredImages[lightboxIndex].src} 
-                alt={filteredImages[lightboxIndex].title} 
+              <img
+                src={filteredImages[lightboxIndex].src}
+                alt={filteredImages[lightboxIndex].title}
                 className="max-w-full max-h-[80vh] rounded-lg shadow-2xl"
               />
               <div className="mt-6">
@@ -116,8 +115,8 @@ const Gallery: React.FC = () => {
       <section className="py-24 text-center mt-12 bg-white">
         <h2 className="text-3xl font-serif text-brand-green mb-4">Craving more?</h2>
         <p className="text-gray-500 mb-8">Follow us on Instagram for daily updates and specials.</p>
-        <a 
-          href="#" 
+        <a
+          href="#"
           className="inline-flex items-center gap-2 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transition-all"
         >
           @iyaraside_restaurant

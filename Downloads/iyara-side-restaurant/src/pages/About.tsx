@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Award, ShieldCheck, Heart, Users, Utensils, Globe, ChevronRight } from '@/components/EmergencyLucideWrapper';
+import { Award, ShieldCheck, Heart, Users, Utensils, Globe, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const About: React.FC = () => {
@@ -23,7 +23,7 @@ const About: React.FC = () => {
     <div className="min-h-screen bg-brand-cream pt-24">
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 z-0 bg-cover bg-center parallax"
           style={{ backgroundImage: "url('https://picsum.photos/seed/about-hero/1920/1080')", filter: "brightness(0.4)" }}
         />

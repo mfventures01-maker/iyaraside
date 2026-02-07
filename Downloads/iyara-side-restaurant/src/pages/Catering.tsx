@@ -1,35 +1,35 @@
 
 import React, { useState } from 'react';
-import { ChefHat, Music, PartyPopper, Briefcase, Heart, CheckCircle, Send, Plus } from '@/components/EmergencyLucideWrapper';
+import { ChefHat, Music, PartyPopper, Briefcase, Heart, CheckCircle, Send, Plus } from 'lucide-react';
 
 const Catering: React.FC = () => {
   const [formState, setFormState] = useState('idle');
 
   const services = [
-    { 
-      title: "Wedding Catering", 
-      icon: <Heart size={32} />, 
+    {
+      title: "Wedding Catering",
+      icon: <Heart size={32} />,
       desc: "From traditional ceremonies to contemporary receptions, we provide a full-service culinary experience.",
       price: "From ₦5,000 / guest",
       img: "https://picsum.photos/seed/cat-wedding/600/400"
     },
-    { 
-      title: "Corporate Events", 
-      icon: <Briefcase size={32} />, 
+    {
+      title: "Corporate Events",
+      icon: <Briefcase size={32} />,
       desc: "Impress clients and treat your team with executive lunch boxes or professional conference buffets.",
       price: "From ₦3,500 / guest",
       img: "https://picsum.photos/seed/cat-corp/600/400"
     },
-    { 
-      title: "Private Parties", 
-      icon: <PartyPopper size={32} />, 
+    {
+      title: "Private Parties",
+      icon: <PartyPopper size={32} />,
       desc: "Celebrate birthdays, anniversaries, or house warmings with our curated party menus and staff.",
       price: "From ₦4,000 / guest",
       img: "https://picsum.photos/seed/cat-party/600/400"
     },
-    { 
-      title: "Small Chops & Snacks", 
-      icon: <ChefHat size={32} />, 
+    {
+      title: "Small Chops & Snacks",
+      icon: <ChefHat size={32} />,
       desc: "Light bites, authentic finger foods, and cocktail snacks for launches and casual gatherings.",
       price: "From ₦2,500 / guest",
       img: "https://picsum.photos/seed/cat-snack/600/400"
@@ -67,7 +67,7 @@ const Catering: React.FC = () => {
     <div className="min-h-screen bg-brand-cream pt-24">
       {/* Hero */}
       <section className="relative h-[60vh] flex items-center justify-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('https://picsum.photos/seed/cat-hero/1920/1080')", filter: "brightness(0.3)" }}
         />
@@ -83,7 +83,7 @@ const Catering: React.FC = () => {
         <p className="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed mb-16">
           Whether you're hosting 50 or 500, our team brings the same passion for flavor and dedication to quality service to your chosen venue. We handle everything from menu design to cleanup.
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {services.map((s, i) => (
             <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-xl hover:-translate-y-2 transition-all">
@@ -119,7 +119,7 @@ const Catering: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <button 
+                <button
                   onClick={() => document.getElementById('inquiry-form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="w-full py-4 rounded-xl font-bold border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-green transition-all"
                 >
@@ -175,12 +175,12 @@ const Catering: React.FC = () => {
                 <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Special Requests / Menu Preferences</label>
                 <textarea rows={4} className="w-full bg-brand-cream px-4 py-3 rounded-xl outline-none border border-transparent focus:border-brand-gold transition-all resize-none"></textarea>
               </div>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={formState === 'loading'}
                 className="w-full bg-brand-green text-white py-4 rounded-xl font-bold text-lg hover:bg-brand-dark transition-all flex items-center justify-center gap-2 shadow-xl"
               >
-                {formState === 'loading' ? <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-white"></div> : <>Submit Inquiry <Send size={20}/></>}
+                {formState === 'loading' ? <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-white"></div> : <>Submit Inquiry <Send size={20} /></>}
               </button>
             </form>
           )}

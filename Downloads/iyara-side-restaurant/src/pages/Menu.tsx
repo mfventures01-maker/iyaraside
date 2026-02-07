@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Plus, Minus, X, Trash2, MessageSquare, Flame, Leaf, ChevronRight, Check } from '@/components/EmergencyLucideWrapper';
+import { Search, ShoppingBag, Plus, Minus, X, Trash2, MessageSquare, Flame, Leaf, ChevronRight, Check } from 'lucide-react';
 import { ALL_DISHES } from '../constants';
 import { Dish } from '../types';
 import { useCart } from '../context/CartContext';
@@ -23,8 +23,8 @@ const MenuPage: React.FC = () => {
       combined = combined.filter(d => d.category === activeCategory);
     }
     if (searchTerm) {
-      combined = combined.filter(d => 
-        d.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      combined = combined.filter(d =>
+        d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         d.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -49,11 +49,11 @@ const MenuPage: React.FC = () => {
   const handleAddToCart = (dish: Dish) => {
     const qty = quantities[dish.id] || 1;
     addToCart(dish, qty);
-    
+
     // Visual feedback
     setAddingId(dish.id);
     setTimeout(() => setAddingId(null), 1500);
-    
+
     // Optional: Reset local quantity to 1 after adding
     setQuantities(prev => ({ ...prev, [dish.id]: 1 }));
   };
@@ -96,9 +96,8 @@ const MenuPage: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`whitespace-nowrap px-6 py-2 rounded-lg text-sm font-bold transition-all ${
-                  activeCategory === cat ? 'bg-brand-green text-white shadow-md' : 'text-brand-green/60 hover:text-brand-green'
-                }`}
+                className={`whitespace-nowrap px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeCategory === cat ? 'bg-brand-green text-white shadow-md' : 'text-brand-green/60 hover:text-brand-green'
+                  }`}
               >
                 {cat}
               </button>
@@ -107,8 +106,8 @@ const MenuPage: React.FC = () => {
 
           <div className="relative w-full lg:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search for your favorite dish..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,7 +115,7 @@ const MenuPage: React.FC = () => {
             />
           </div>
 
-          <button 
+          <button
             onClick={() => setIsCartOpen(true)}
             className="flex items-center text-brand-green font-bold text-sm bg-brand-gold px-6 py-3 rounded-xl hover:bg-brand-dark hover:text-white transition-all w-full lg:w-auto justify-center"
           >
@@ -149,34 +148,33 @@ const MenuPage: React.FC = () => {
                     <p className="text-brand-gold font-bold text-xl whitespace-nowrap ml-4">₦{dish.price.toLocaleString()}</p>
                   </div>
                   <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-2">{dish.description}</p>
-                  
+
                   <div className="flex items-center justify-between gap-4 mb-4">
                     <div className="flex items-center bg-brand-cream rounded-lg p-1">
-                      <button onClick={() => handleQtyChange(dish.id, -1)} className="p-2 hover:text-brand-gold transition-colors"><Minus size={16}/></button>
-                      <input 
+                      <button onClick={() => handleQtyChange(dish.id, -1)} className="p-2 hover:text-brand-gold transition-colors"><Minus size={16} /></button>
+                      <input
                         type="number"
                         min="1"
                         value={quantities[dish.id] || 1}
                         onChange={(e) => handleQtyInput(dish.id, e.target.value)}
                         className="w-12 text-center bg-transparent font-bold text-brand-green outline-none"
                       />
-                      <button onClick={() => handleQtyChange(dish.id, 1)} className="p-2 hover:text-brand-gold transition-colors"><Plus size={16}/></button>
+                      <button onClick={() => handleQtyChange(dish.id, 1)} className="p-2 hover:text-brand-gold transition-colors"><Plus size={16} /></button>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleAddToCart(dish)}
                       disabled={addingId === dish.id}
-                      className={`flex-1 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
-                        addingId === dish.id ? 'bg-green-500 text-white' : 'bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white'
-                      }`}
+                      className={`flex-1 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${addingId === dish.id ? 'bg-green-500 text-white' : 'bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white'
+                        }`}
                     >
                       {addingId === dish.id ? <><Check size={18} /> Added</> : 'Add to Cart'}
                     </button>
                   </div>
-                  <button 
+                  <button
                     onClick={() => handleBuyNow(dish)}
                     className="w-full bg-brand-green text-white py-4 rounded-xl font-bold hover:bg-brand-dark transition-all flex items-center justify-center gap-2"
                   >
-                    Quick Order <ChevronRight size={18}/>
+                    Quick Order <ChevronRight size={18} />
                   </button>
                 </div>
               </div>
@@ -212,9 +210,9 @@ const MenuPage: React.FC = () => {
                       <p className="text-brand-gold font-bold">₦{(item.price * item.quantity).toLocaleString()}</p>
                       <div className="flex items-center gap-4 mt-2">
                         <div className="flex items-center bg-brand-cream rounded-lg p-1">
-                          <button onClick={() => updateQuantity(item.id, -1)} className="p-1"><Minus size={14}/></button>
+                          <button onClick={() => updateQuantity(item.id, -1)} className="p-1"><Minus size={14} /></button>
                           <span className="px-3 font-bold text-xs">{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, 1)} className="p-1"><Plus size={14}/></button>
+                          <button onClick={() => updateQuantity(item.id, 1)} className="p-1"><Plus size={14} /></button>
                         </div>
                       </div>
                     </div>
@@ -229,7 +227,7 @@ const MenuPage: React.FC = () => {
                   <span>Total</span>
                   <span>₦{totalPrice.toLocaleString()}</span>
                 </div>
-                <button 
+                <button
                   onClick={handleCheckout}
                   className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3"
                 >

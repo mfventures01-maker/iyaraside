@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, MessageSquare, Clock, Send, CheckCircle } from '@/components/EmergencyLucideWrapper';
+import { MapPin, Phone, Mail, MessageSquare, Clock, Send, CheckCircle } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const [formState, setFormState] = useState('idle'); // idle, loading, success
@@ -69,7 +69,7 @@ const Contact: React.FC = () => {
                 <CheckCircle size={64} className="text-green-500 mx-auto mb-6" />
                 <h2 className="text-3xl font-serif text-brand-green mb-4">Message Sent!</h2>
                 <p className="text-gray-600 mb-8">Thank you for reaching out. A member of our team will contact you shortly.</p>
-                <button 
+                <button
                   onClick={() => setFormState('idle')}
                   className="bg-brand-green text-white px-10 py-3 rounded-full font-bold hover:bg-brand-gold transition-colors"
                 >
@@ -106,8 +106,8 @@ const Contact: React.FC = () => {
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Your Message</label>
                   <textarea required rows={5} className="w-full bg-brand-cream border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-gold transition-all resize-none"></textarea>
                 </div>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={formState === 'loading'}
                   className="w-full bg-brand-green text-white py-4 rounded-xl font-bold text-lg hover:bg-brand-dark transition-all flex items-center justify-center gap-2 shadow-xl group"
                 >
@@ -129,13 +129,13 @@ const Contact: React.FC = () => {
           <p className="text-xs font-bold text-brand-gold uppercase mb-1">Our Location</p>
           <p className="text-brand-green font-serif">123 Summit Road, Asaba</p>
         </div>
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15873.308736146205!2d6.7027!3d6.195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1043f22567866d93%3A0x6a0a095759a22199!2sAsaba%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1715800000000!5m2!1sen!2sus" 
-          width="100%" 
-          height="100%" 
-          style={{ border: 0 }} 
-          allowFullScreen 
-          loading="lazy" 
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15873.308736146205!2d6.7027!3d6.195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1043f22567866d93%3A0x6a0a095759a22199!2sAsaba%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1715800000000!5m2!1sen!2sus"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           className="grayscale hover:grayscale-0 transition-all duration-700"
         ></iframe>

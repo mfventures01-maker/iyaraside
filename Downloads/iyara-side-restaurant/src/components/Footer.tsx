@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from '@/components/EmergencyLucideWrapper';
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -59,9 +59,9 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-serif font-bold mb-6 text-brand-gold">Newsletter</h4>
             <p className="text-sm text-gray-400 mb-4">Subscribe to receive updates on seasonal menus and special events.</p>
             <form className="flex flex-col space-y-2">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
+              <input
+                type="email"
+                placeholder="Your email address"
                 className="bg-brand-green/30 border border-brand-green/50 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-gold"
               />
               <button className="bg-brand-gold text-brand-green font-bold py-3 rounded-lg text-sm hover:bg-white transition-all">

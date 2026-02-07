@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Utensils, Award, ChevronRight, Star, Zap, ShieldCheck, Sparkles, ArrowDown, MessageSquare, BellRing } from '@/components/EmergencyLucideWrapper';
+import { Utensils, Award, ChevronRight, Star, Zap, ShieldCheck, Sparkles, ArrowDown, MessageSquare, BellRing } from 'lucide-react';
 import { ALL_DISHES, TESTIMONIALS } from '../constants';
 import { getMenuRecommendation } from '../services/geminiService';
 import { useCart } from '../context/CartContext';

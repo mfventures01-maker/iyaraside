@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Calendar, Users, Clock, MessageSquare, CheckCircle, Info, CalendarPlus } from '@/components/EmergencyLucideWrapper';
+import { Calendar, Users, Clock, MessageSquare, CheckCircle, Info, CalendarPlus } from 'lucide-react';
 
 const Reservations: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -23,10 +23,10 @@ const Reservations: React.FC = () => {
 
   const getCalendarLinks = () => {
     const { name, date, time, guests, occasion, requests } = formData;
-    
+
     // Format Date and Time for Calendar (e.g., 20231027T193000)
     const startDateTimeStr = `${date.replace(/-/g, '')}T${time.replace(/:/g, '')}00`;
-    
+
     // Assume 2 hour duration
     const startDate = new Date(`${date}T${time}`);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
@@ -71,7 +71,7 @@ const Reservations: React.FC = () => {
           <p className="text-gray-600 mb-8 leading-relaxed">
             Thank you, {formData.name}. We've successfully reserved a table for {formData.guests} people on {formData.date} at {formData.time}. A confirmation email has been sent to {formData.email}.
           </p>
-          
+
           <div className="bg-brand-cream p-6 rounded-2xl mb-8 text-left border border-brand-green/10">
             <h4 className="font-bold text-brand-green mb-2 flex items-center gap-2">
               <Info size={18} className="text-brand-gold" />
@@ -91,23 +91,23 @@ const Reservations: React.FC = () => {
               Add to Calendar
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <a 
-                href={googleUrl} 
-                target="_blank" 
+              <a
+                href={googleUrl}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium hover:border-brand-gold hover:text-brand-gold transition-all shadow-sm"
               >
                 Google
               </a>
-              <a 
-                href={icsBlob} 
+              <a
+                href={icsBlob}
                 download="iyara-side-reservation.ics"
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium hover:border-brand-gold hover:text-brand-gold transition-all shadow-sm"
               >
                 Apple
               </a>
-              <a 
-                href={icsBlob} 
+              <a
+                href={icsBlob}
                 download="iyara-side-reservation.ics"
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium hover:border-brand-gold hover:text-brand-gold transition-all shadow-sm"
               >
@@ -116,7 +116,7 @@ const Reservations: React.FC = () => {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => setSubmitted(false)}
             className="w-full bg-brand-green text-white py-4 rounded-xl font-bold hover:bg-brand-dark transition-all"
           >
@@ -178,68 +178,68 @@ const Reservations: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-bold text-brand-green mb-2">Full Name *</label>
-                  <input 
-                    required 
-                    type="text" 
+                  <input
+                    required
+                    type="text"
                     placeholder="e.g., Jane Doe"
                     className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-brand-green mb-2">Phone Number *</label>
-                  <input 
-                    required 
-                    type="tel" 
+                  <input
+                    required
+                    type="tel"
                     placeholder="+234 ..."
                     className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                    onChange={e => setFormData({...formData, phone: e.target.value})}
+                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-brand-green mb-2">Email Address *</label>
-                  <input 
-                    required 
-                    type="email" 
+                  <input
+                    required
+                    type="email"
                     placeholder="email@example.com"
                     className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                    onChange={e => setFormData({...formData, email: e.target.value})}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-brand-green mb-2">Date *</label>
-                    <input 
-                      required 
-                      type="date" 
+                    <input
+                      required
+                      type="date"
                       className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                      onChange={e => setFormData({...formData, date: e.target.value})}
+                      onChange={e => setFormData({ ...formData, date: e.target.value })}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-brand-green mb-2">Time *</label>
-                    <input 
-                      required 
-                      type="time" 
+                    <input
+                      required
+                      type="time"
                       className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                      onChange={e => setFormData({...formData, time: e.target.value})}
+                      onChange={e => setFormData({ ...formData, time: e.target.value })}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-brand-green mb-2">Number of Guests *</label>
-                  <select 
+                  <select
                     className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                    onChange={e => setFormData({...formData, guests: e.target.value})}
+                    onChange={e => setFormData({ ...formData, guests: e.target.value })}
                   >
-                    {[1,2,3,4,5,6,7,8,'10+'].map(num => <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>)}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, '10+'].map(num => <option key={num} value={num}>{num} {num === 1 ? 'Guest' : 'Guests'}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-brand-green mb-2">Occasion</label>
-                  <select 
+                  <select
                     className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all"
-                    onChange={e => setFormData({...formData, occasion: e.target.value})}
+                    onChange={e => setFormData({ ...formData, occasion: e.target.value })}
                   >
                     <option>Casual Dining</option>
                     <option>Birthday</option>
@@ -249,18 +249,18 @@ const Reservations: React.FC = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-bold text-brand-green mb-2">Special Requirements</label>
-                <textarea 
+                <textarea
                   rows={4}
                   placeholder="e.g., Wheelchair access, food allergies, high chair needed..."
                   className="w-full px-4 py-3 bg-brand-cream border border-transparent focus:border-brand-gold rounded-xl outline-none transition-all resize-none"
-                  onChange={e => setFormData({...formData, requests: e.target.value})}
+                  onChange={e => setFormData({ ...formData, requests: e.target.value })}
                 ></textarea>
               </div>
 
-              <button 
+              <button
                 type="submit"
                 className="w-full bg-brand-gold text-brand-green py-5 rounded-2xl font-bold text-lg hover:bg-brand-green hover:text-white transition-all shadow-xl flex items-center justify-center group"
               >

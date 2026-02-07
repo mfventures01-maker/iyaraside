@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, CreditCard, Banknote, Smartphone, CheckCircle } from '@/components/EmergencyLucideWrapper';
+import { X, CreditCard, Banknote, Smartphone, CheckCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOperations } from '../context/OperationsContext';
 

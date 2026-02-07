@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLuxury } from '../context/LuxuryContext';
 import { useOperations } from '../context/OperationsContext';
-import { ArrowUpRight, ShieldCheck, Zap, Activity } from '@/components/EmergencyLucideWrapper';
+import { ArrowUpRight, ShieldCheck, Zap, Activity } from 'lucide-react';
 
 const EliteDashboard: React.FC = () => {
     const { isLuxuryMode, toggleLuxuryMode, liquidAssets, discretionScore } = useLuxury();
