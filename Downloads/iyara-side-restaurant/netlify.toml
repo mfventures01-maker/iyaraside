@@ -1,7 +1,9 @@
 [build]
-  # Publish the static_site folder, ignoring the root React app
+  # Base directory is root
+  base = "."
+  # Publish the static_site folder
   publish = "static_site"
-  # No build command required for Vanilla JS
+  # Skip npm install and build, just deploy static files
   command = "echo 'Deploying Static Engine v2.0'"
 
 [context.production]
