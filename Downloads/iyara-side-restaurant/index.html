@@ -1,12 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iyarà Side Restaurant | Contemporary African & Intercontinental Cuisine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -46,33 +48,41 @@
             background-color: #FDFBF7;
             scroll-behavior: smooth;
         }
+
         .parallax {
             background-attachment: fixed;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
         }
+
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
         @media (max-width: 768px) {
             .parallax {
                 background-attachment: scroll;
             }
         }
+
         /* Custom typography refinements */
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             letter-spacing: -0.02em;
         }
+
         .text-brand-gold {
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
         }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
@@ -84,10 +94,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+
 </head>
+
 <body>
     <div id="root"></div>
-<script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
 </body>
+
 </html>
