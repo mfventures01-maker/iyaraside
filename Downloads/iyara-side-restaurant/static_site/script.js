@@ -34,6 +34,158 @@ const CARSS_CONFIG = {
 };
 const MAX_TABLE_NUMBER = 999;
 
+// --- localStorage Persistence Layer ---
+
+// Storage keys (versioned)
+const CART_KEY = "iyara_cart_v1";
+const ORDERS_KEY = "iyara_orders_v1";
+
+// A) Storage helpers with resilient error handling
+function safeReadJSON(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch (error) {
+        console.error(`[Storage] Failed to read ${key}:`, error);
+        return null;
+    }
+}
+
+function safeWriteJSON(key, obj) {
+    try {
+        const json = JSON.stringify(obj);
+        localStorage.setItem(key, json);
+        return true;
+    } catch (error) {
+        console.error(`[Storage] Failed to write ${key}:`, error);
+        return false;
+    }
+}
+
+function clearStorageKey(key) {
+    try {
+        localStorage.removeItem(key);
+    } catch (error) {
+        console.error(`[Storage] Failed to clear ${key}:`, error);
+    }
+}
+
+// Validation helpers
+function isValidCartPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    if (payload.version !== 1) return false;
+    if (typeof payload.tableNumber !== 'string') return false;
+    if (typeof payload.updatedAt !== 'number') return false;
+    if (!Array.isArray(payload.items)) return false;
+    return true;
+}
+
+function isValidOrdersPayload(payload) {
+    if (!Array.isArray(payload)) return false;
+    return payload.every(isValidOrderRecord);
+}
+
+function isValidOrderRecord(record) {
+    if (!record || typeof record !== 'object') return false;
+    if (typeof record.orderId !== 'string') return false;
+    if (typeof record.tableNumber !== 'string') return false;
+    if (typeof record.total !== 'number') return false;
+    if (!['POS', 'CASH', 'TRANSFER'].includes(record.paymentMethod)) return false;
+    if (typeof record.createdAt !== 'number') return false;
+    if (typeof record.signature !== 'string') return false;
+    if (typeof record.whatsappText !== 'string') return false;
+    return true;
+}
+
+// B) Cart persistence (localStorage)
+function saveCartToStorage() {
+    if (!tableNumber) return; // No table context yet
+
+    const payload = {
+        version: 1,
+        tableNumber: tableNumber,
+        updatedAt: Date.now(),
+        items: cart
+    };
+
+    safeWriteJSON(CART_KEY, payload);
+}
+
+function loadCartFromStorage() {
+    if (!tableNumber) return; // No active table yet
+
+    const payload = safeReadJSON(CART_KEY);
+
+    // Invalid or corrupt payload => clear
+    if (!isValidCartPayload(payload)) {
+        if (payload !== null) {
+            console.warn('[Cart] Invalid cart payload detected, clearing storage');
+            clearStorageKey(CART_KEY);
+        }
+        return;
+    }
+
+    // Table isolation: stored cart for different table => clear
+    if (payload.tableNumber !== tableNumber) {
+        console.log(`[Cart] Table mismatch (stored: ${payload.tableNumber}, active: ${tableNumber}), clearing cart`);
+        clearStorageKey(CART_KEY);
+        cart = [];
+        updateCartUI();
+        return;
+    }
+
+    // Valid match => restore cart
+    cart = payload.items || [];
+    updateCartUI();
+    console.log(`[Cart] Restored ${cart.length} items from storage for table ${tableNumber}`);
+}
+
+function clearCartStorage() {
+    clearStorageKey(CART_KEY);
+}
+
+// C) Order history persistence (localStorage)
+function appendOrderToHistory(orderRecord) {
+    if (!isValidOrderRecord(orderRecord)) {
+        console.error('[Orders] Invalid order record, skipping append:', orderRecord);
+        return;
+    }
+
+    let orders = safeReadJSON(ORDERS_KEY);
+
+    // If corrupted or invalid => reset
+    if (!isValidOrdersPayload(orders)) {
+        console.warn('[Orders] Invalid orders payload, resetting');
+        orders = [];
+    }
+
+    // Prepend new order (most recent first)
+    orders.unshift(orderRecord);
+
+    // Keep last 10 orders only
+    if (orders.length > 10) {
+        orders = orders.slice(0, 10);
+    }
+
+    safeWriteJSON(ORDERS_KEY, orders);
+    console.log(`[Orders] Appended order ${orderRecord.orderId}, total stored: ${orders.length}`);
+}
+
+function loadOrderHistory() {
+    const orders = safeReadJSON(ORDERS_KEY);
+
+    if (!isValidOrdersPayload(orders)) {
+        if (orders !== null) {
+            console.warn('[Orders] Invalid orders payload, resetting');
+            clearStorageKey(ORDERS_KEY);
+        }
+        return [];
+    }
+
+    return orders;
+}
+
 // DOM Elements
 const menuGrid = document.getElementById('menu-grid');
 const categoryList = document.getElementById('category-list');
@@ -92,6 +244,10 @@ function init() {
     renderCategories();
     renderMenu();
     renderMenu();
+
+    // Load persisted cart after table context is established
+    loadCartFromStorage();
+
     updateCartUI();
     hydrateAppsConfig();
 
@@ -250,6 +406,7 @@ function addToCart(dishId) {
         cart.push({ ...dish, quantity: 1 });
     }
     updateCartUI();
+    saveCartToStorage();
     // Visual feedback could be added here
     toggleCart(true);
 }
@@ -263,11 +420,13 @@ function updateQuantity(dishId, delta) {
         }
     }
     updateCartUI();
+    saveCartToStorage();
 }
 
 function removeFromCart(dishId) {
     cart = cart.filter(i => i.id !== dishId);
     updateCartUI();
+    saveCartToStorage();
 }
 
 function updateCartUI() {
@@ -470,6 +629,24 @@ function showPaymentConfirmation(method, orderData) {
     document.getElementById(`${method.toLowerCase()}-order-id`).textContent = orderData.orderId;
     document.getElementById(`${method.toLowerCase()}-total`).textContent = `₦${orderData.total.toLocaleString()}`;
 
+    // Build WhatsApp message (for both sending and storage)
+    const whatsappMessage = buildWhatsAppMessage(orderData);
+    const plainTextMessage = whatsappMessage.replace(/%0A/g, '\n').replace(/%20/g, ' ');
+
+    // Create order record for history
+    const orderRecord = {
+        orderId: orderData.orderId,
+        tableNumber: orderData.table,
+        total: orderData.total,
+        paymentMethod: orderData.method,
+        createdAt: Date.now(),
+        signature: generateOrderSignature(orderData),
+        whatsappText: plainTextMessage  // Store plain text for replay
+    };
+
+    // Append to order history
+    appendOrderToHistory(orderRecord);
+
     // Prevent body scroll (mobile-first fix)
     document.body.classList.add('modal-open');
 
@@ -591,6 +768,7 @@ function closePaymentConfirmation() {
     // Clear cart and reset
     cart = [];
     currentOrderData = null;
+    clearCartStorage();  // Clear persisted cart
     updateCartUI();
 }
 

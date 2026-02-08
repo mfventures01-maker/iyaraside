@@ -20,6 +20,7 @@ import DashboardRouter from './pages/DashboardRouter';
 import CeoHQ from './pages/CeoHQ';
 import StaffAdmin from './pages/StaffAdmin';
 import TransactionsLog from './pages/TransactionsLog';
+import PosTerminal from './pages/PosTerminal';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -55,7 +56,9 @@ const App: React.FC = () => {
                     <Route path="/dashboard" element={<DashboardRouter />} />
                     <Route path="/dashboard/ceo" element={<CeoHQ />} />
                     <Route path="/dashboard/staff-admin" element={<StaffAdmin />} />
+                    <Route path="/dashboard/staff-admin" element={<StaffAdmin />} />
                     <Route path="/dashboard/transactions" element={<TransactionsLog />} />
+                    <Route path="/dashboard/pos" element={<PosTerminal />} />
                   </Routes>
                 </main>
                 <Footer />

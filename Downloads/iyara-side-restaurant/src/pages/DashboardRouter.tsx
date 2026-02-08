@@ -8,7 +8,7 @@ export default function DashboardRouter() {
 
     if (staff.role === "ceo") return <Navigate to="/dashboard/ceo" replace />;
     // staff/manager
-    return <Navigate to="/dashboard/transactions" replace />;
+    return <Navigate to="/dashboard/pos" replace />;
     // Wait, user request said "/dashboard/transactions (logs)" in Step 2.
     // And the user code scaffolding for router directs here.
     // I need to make sure I create a placeholder for transactions to avoid 404 infinite loop if not implemented.
