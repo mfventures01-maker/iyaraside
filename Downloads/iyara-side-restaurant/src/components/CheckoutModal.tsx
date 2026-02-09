@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { X, CreditCard, Banknote, Smartphone, CheckCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOperations } from '../context/OperationsContext';
+import { sendOrderNotifications, type OrderNotification } from '../config/messaging';
 
 interface CheckoutModalProps {
     isOpen: boolean;
@@ -41,24 +42,26 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
             status: 'PENDING' as const
         };
 
-        // 3. Emit to Live Dashboard (Mock Backend)
+        // 3. Emit to Live Dashboard
         addOrder(newOrder);
 
-        // 4. Send to WhatsApp (User Notification / Fallback)
-        const phone = "2347048033575";
-        const methodMap = { POS: 'POS Terminal', CASH: 'Cash', TRANSFER: 'Bank Transfer' };
-        const methodText = methodMap[paymentMethod];
-
-        const tableHeader = localTable ? `*TABLE NUMBER: ${localTable}*%0A%0A` : '';
-        const itemsText = cart.map(item => `- ${item.quantity}x ${item.name} (₦${(item.price * item.quantity).toLocaleString()})`).join('%0A');
-        const totalText = `Total: ₦${totalPrice.toLocaleString()}`;
-        const paymentText = `Payment Method: ${methodText}`;
-
-        const message = `${tableHeader}NEW ORDER (${orderId}):%0A%0A${itemsText}%0A%0A${totalText}%0A${paymentText}%0A%0APlease confirm.`;
+        // 4. Send notifications via WhatsApp and Telegram
+        const notification: OrderNotification = {
+            orderId,
+            tableNumber: localTable || 'Unknown',
+            items: cart.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            totalAmount: totalPrice,
+            paymentMethod: paymentMethod,
+            timestamp: new Date().toISOString(),
+        };
 
         // Simulate network delay
         setTimeout(() => {
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            sendOrderNotifications(notification);
             setIsProcessing(false);
             setIsSuccess(true);
             clearCart();
